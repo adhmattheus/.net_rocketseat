@@ -1,4 +1,5 @@
-﻿namespace Petfolio.Communication.Response;
+﻿
+namespace Petfolio.Communication.Response;
 public class ResponseRegisterPetJson
 {
     public int Id { get; set; }
