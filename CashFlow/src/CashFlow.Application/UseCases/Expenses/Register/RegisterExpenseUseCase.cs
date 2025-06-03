@@ -1,28 +1,31 @@
-﻿using CashFlow.Communication.Enums;
-using CashFlow.Communication.Requests;
-using CashFlow.Communication.Responses;
-using CashFlow.Exception.ExceptionBase;
-using System.Data;
+﻿    using CashFlow.Communication.Enums;
+    using CashFlow.Communication.Requests;
+    using CashFlow.Communication.Responses;
+    using CashFlow.Exception.ExceptionBase;
+    using System.Data;
 
-namespace CashFlow.Application.UseCases.Expenses.Register;
-public class RegisterExpenseUseCase
-{
-    public static ResponseRegisterExpenseJson Execute(RequestRegisterExpenseJson request) 
+    namespace CashFlow.Application.UseCases.Expenses.Register;
+    public class RegisterExpenseUseCase
     {
-        Validate(request);
-        return new ResponseRegisterExpenseJson();
+        public static ResponseRegisterExpenseJson Execute(RequestRegisterExpenseJson request) 
+        {
+            Validate(request);
+        return new ResponseRegisterExpenseJson
+        {
+            Title = request.Title
+        };
     }
 
-    private static void Validate(RequestRegisterExpenseJson request)
-    {
-        var validator = new RegisterExpenseValidator();
-        var result = validator.Validate(request);
-
-        if (!result.IsValid)
+        private static void Validate(RequestRegisterExpenseJson request)
         {
-            var errorMessages = result.Errors.Select(f => f.ErrorMessage).ToList();
+            var validator = new RegisterExpenseValidator();
+            var result = validator.Validate(request);
 
-            throw new ErrorOnValidationException(errorMessages);
+            if (!result.IsValid)
+            {
+                var errorMessages = result.Errors.Select(f => f.ErrorMessage).ToList();
+
+                throw new ErrorOnValidationException(errorMessages);
+            }
         }
     }
-}
