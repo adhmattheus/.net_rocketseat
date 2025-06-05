@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35728.132 d17.12
+VisualStudioVersion = 17.12.35728.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{77572B8E-F9D5-496E-995B-2E9C33106CA9}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashFlow.Exception", "src\CashFlow.Exception\CashFlow.Exception.csproj", "{406796F9-2D2F-49EF-B904-2FA0A2F358EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashFlow.Infrastructure", "src\CashFlow.Infrastructure\CashFlow.Infrastructure.csproj", "{B985E11F-2BDA-47D0-AFA9-10FBC2100766}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validators.Tests", "tests\Validators.Tests\Validators.Tests.csproj", "{62D09E2E-881D-4E4D-B588-A498C9F7269B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{B985E11F-2BDA-47D0-AFA9-10FBC2100766}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B985E11F-2BDA-47D0-AFA9-10FBC2100766}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B985E11F-2BDA-47D0-AFA9-10FBC2100766}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62D09E2E-881D-4E4D-B588-A498C9F7269B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62D09E2E-881D-4E4D-B588-A498C9F7269B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62D09E2E-881D-4E4D-B588-A498C9F7269B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62D09E2E-881D-4E4D-B588-A498C9F7269B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,5 +66,6 @@ Global
 		{FD06E099-B1EC-4A9E-950B-24C7A101D94D} = {77572B8E-F9D5-496E-995B-2E9C33106CA9}
 		{406796F9-2D2F-49EF-B904-2FA0A2F358EC} = {77572B8E-F9D5-496E-995B-2E9C33106CA9}
 		{B985E11F-2BDA-47D0-AFA9-10FBC2100766} = {77572B8E-F9D5-496E-995B-2E9C33106CA9}
+		{62D09E2E-881D-4E4D-B588-A498C9F7269B} = {10DC6C5D-A000-407F-997D-0AC38FB5CDC8}
 	EndGlobalSection
 EndGlobal
