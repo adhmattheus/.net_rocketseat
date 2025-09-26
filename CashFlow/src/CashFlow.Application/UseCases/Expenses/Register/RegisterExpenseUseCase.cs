@@ -1,31 +1,38 @@
-﻿    using CashFlow.Communication.Enums;
-    using CashFlow.Communication.Requests;
-    using CashFlow.Communication.Responses;
-    using CashFlow.Exception.ExceptionBase;
-    using System.Data;
+﻿using CashFlow.Communication.Requests;
+using CashFlow.Communication.Responses;
+using CashFlow.Domain.Entities;
+using CashFlow.Exception.ExceptionBase;
+using System.Data;
 
-    namespace CashFlow.Application.UseCases.Expenses.Register;
-    public class RegisterExpenseUseCase
+namespace CashFlow.Application.UseCases.Expenses.Register;
+public class RegisterExpenseUseCase
+{
+    public static ResponseRegisterExpenseJson Execute(RequestRegisterExpenseJson request)
     {
-        public static ResponseRegisterExpenseJson Execute(RequestRegisterExpenseJson request) 
+        Validate(request);
+
+        var entity = new Expense
         {
-            Validate(request);
-        return new ResponseRegisterExpenseJson
-        {
-            Title = request.Title
+            Amount = request.Amount,
+            Date = request.Date,
+            Description = request.Description,
+            Title = request.Title,
+            PaymentType = (Domain.Enums.PaymentType)request.PaymentType
         };
+
+        return new ResponseRegisterExpenseJson();
     }
 
-        private static void Validate(RequestRegisterExpenseJson request)
+    private static void Validate(RequestRegisterExpenseJson request)
+    {
+        var validator = new RegisterExpenseValidator();
+        var result = validator.Validate(request);
+
+        if (!result.IsValid)
         {
-            var validator = new RegisterExpenseValidator();
-            var result = validator.Validate(request);
+            var errorMessages = result.Errors.Select(f => f.ErrorMessage).ToList();
 
-            if (!result.IsValid)
-            {
-                var errorMessages = result.Errors.Select(f => f.ErrorMessage).ToList();
-
-                throw new ErrorOnValidationException(errorMessages);
-            }
+            throw new ErrorOnValidationException(errorMessages);
         }
     }
+}

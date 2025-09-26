@@ -8,6 +8,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMvc(options => options.Filters.Add(typeof(ExcepetionFilter)));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost5244",
+        policy => policy.WithOrigins("http://localhost:5244")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -20,6 +27,8 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<CultureMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowLocalhost5244");
 
 app.UseAuthorization();
 
