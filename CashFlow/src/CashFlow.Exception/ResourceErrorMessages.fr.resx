@@ -132,4 +132,7 @@
   <data name="UNKNOW_ERROR" xml:space="preserve">
     <value>Une erreur inattendue s'est produite lors du traitement de votre demande.</value>
   </data>
+  <data name="EXPENSE_NOT_FOUND" xml:space="preserve">
+    <value>Dépense introuvable.</value>
+  </data>
 </root>

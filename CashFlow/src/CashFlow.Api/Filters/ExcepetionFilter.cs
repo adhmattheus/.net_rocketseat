@@ -8,45 +8,51 @@ namespace CashFlow.Api.Filters;
 
 public class ExcepetionFilter : IExceptionFilter
 {
-    public void OnException(ExceptionContext context)
+  public void OnException(ExceptionContext context)
+  {
+    if (context.Exception is CashFlowException)
     {
-        if (context.Exception is CashFlowException)
-        {
-            HandleProjectException(context);
-        }
-
-        else
-        {
-            ThrowUnkownError(context);
-        }
+      HandleProjectException(context);
     }
 
-    private void HandleProjectException(ExceptionContext context)
+    else
     {
-        if (context.Exception is ErrorOnValidationException)
-        {
-            var ex = (ErrorOnValidationException)context.Exception;
-
-            var errorResponse = new ResponseErrorJson(ex.Errors);
-
-            context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-            context.Result = new BadRequestObjectResult(errorResponse);
-        }
-        else
-        {
-            var errorResponse = new ResponseErrorJson(context.Exception.Message);
-
-            context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-            context.Result = new BadRequestObjectResult(errorResponse);
-        }
+      ThrowUnkownError(context);
     }
+  }
 
-    private void ThrowUnkownError(ExceptionContext context)
+  private void HandleProjectException(ExceptionContext context)
+  {
+    if (context.Exception is ErrorOnValidationException)
     {
-        var errorResponse = new ResponseErrorJson(ResourceErrorMessages.UNKNOW_ERROR);
+      var ex = (ErrorOnValidationException)context.Exception;
 
-        context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        context.Result = new ObjectResult(errorResponse);
+      var errorResponse = new ResponseErrorJson(ex.Errors);
 
+      context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+      context.Result = new BadRequestObjectResult(errorResponse);
     }
+    else if (context.Exception is NotFoundException ex)
+    {
+      var errorResponse = new ResponseErrorJson(ex.Message);
+      context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+      context.Result = new NotFoundObjectResult(errorResponse);
+    }
+    else
+    {
+      var errorResponse = new ResponseErrorJson(context.Exception.Message);
+
+      context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+      context.Result = new BadRequestObjectResult(errorResponse);
+    }
+  }
+
+  private void ThrowUnkownError(ExceptionContext context)
+  {
+    var errorResponse = new ResponseErrorJson(ResourceErrorMessages.UNKNOW_ERROR);
+
+    context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+    context.Result = new ObjectResult(errorResponse);
+
+  }
 }
