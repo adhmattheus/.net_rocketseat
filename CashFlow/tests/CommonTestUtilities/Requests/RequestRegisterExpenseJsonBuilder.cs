@@ -5,13 +5,13 @@ using CashFlow.Communication.Requests;
 namespace CommonTestUtilities.Requests;
 public class RequestRegisterExpenseJsonBuilder
 {
-    public static RequestRegisterExpenseJson Build()
+    public static RequestExpenseJson Build()
     {
-        return new Faker<RequestRegisterExpenseJson>()
+        return new Faker<RequestExpenseJson>()
             .RuleFor(x => x.Title, faker => faker.Commerce.ProductName())
             .RuleFor(x => x.Description, faker => faker.Commerce.ProductDescription())
             .RuleFor(x => x.Date, faker => faker.Date.Past())
-            .RuleFor(x => x.PaymentType, faker => faker.PickRandom<PaymentsType>())
+            .RuleFor(x => x.PaymentType, faker => faker.PickRandom<PaymentType>())
             .RuleFor(x => x.Amount, faker => faker.Random.Decimal(min: 1, max: 1000));
     }
 }

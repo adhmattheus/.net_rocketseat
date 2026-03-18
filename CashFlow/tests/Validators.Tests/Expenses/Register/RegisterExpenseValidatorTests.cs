@@ -1,5 +1,4 @@
-﻿using CashFlow.Application.UseCases.Expenses.Register;
-using CashFlow.Communication.Requests;
+﻿using CashFlow.Application.UseCases.Expenses;
 using CommonTestUtilities.Requests;
 
 namespace Validators.Tests.Expenses.Register;
@@ -9,7 +8,7 @@ public class RegisterExpenseValidatorTests
     public void Success()
     {
         // Arrange
-        var validator = new RegisterExpenseValidator();
+        var validator = new ExpenseValidator();
         var request = RequestRegisterExpenseJsonBuilder.Build();
 
         // Act
