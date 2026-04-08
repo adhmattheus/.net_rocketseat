@@ -15,7 +15,7 @@ public class ExpensesReportFontResolver : IFontResolver
 
     var data = new byte[length];
 
-    stream.ReadExactly(buffer: data, offset: 0, count: length);
+    stream.Read(buffer: data, offset: 0, count: length);
 
     return data;
   }
