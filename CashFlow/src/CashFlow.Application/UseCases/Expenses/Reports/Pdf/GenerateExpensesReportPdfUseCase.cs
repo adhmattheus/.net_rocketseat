@@ -7,6 +7,7 @@ using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using PdfSharp.Fonts;
+using System.Reflection;
 
 namespace CashFlow.Application.UseCases.Expenses.Reports.Pdf;
 
@@ -26,6 +27,7 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
   public async Task<byte[]> Execute(DateOnly month)
   {
+
     var expenses = await _repository.FilterByMonth(month);
     if (expenses.Count == 0)
     {
@@ -34,6 +36,8 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
     var document = CreateDocument(month);
     var page = CreatePage(document);
+
+    CreateHeaderWithProfilePhotoAndName(page);
 
     var totalExpenses = expenses.Sum(expense => expense.Amount);
     CreateTotalSpentSection(page, month, totalExpenses);
@@ -110,6 +114,25 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
     section.PageSetup.BottomMargin = 80;
 
     return section;
+  }
+
+  private void CreateHeaderWithProfilePhotoAndName(Section page)
+  {
+    var table = page.AddTable();
+    table.AddColumn();
+    table.AddColumn("300");
+
+    var row = table.AddRow();
+
+    var assembly = Assembly.GetExecutingAssembly();
+    var directoryName = Path.GetDirectoryName(assembly.Location);
+    var pathFile = Path.Combine(directoryName!, "Logo", "ProfilePhoto.png");
+
+    row.Cells[0].AddImage(pathFile);
+
+    row.Cells[1].AddParagraph($"Hey, CasFlow");
+    row.Cells[1].Format.Font = new Font { Name = FontHelper.RALEWAY_BLACK, Size = 16 };
+    row.Cells[1].VerticalAlignment = MigraDoc.DocumentObjectModel.Tables.VerticalAlignment.Center;
   }
 
   private void CreateTotalSpentSection(Section page, DateOnly month, decimal totalExpenses)
