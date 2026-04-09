@@ -1,6 +1,6 @@
 ﻿using CashFlow.Application.UseCases.Expenses.Reports.Pdf.Colors;
 using CashFlow.Application.UseCases.Expenses.Reports.Pdf.Fonts;
-using CashFlow.Domain.Enums;
+using CashFlow.Domain.Extensions;
 using CashFlow.Domain.Reports;
 using CashFlow.Domain.Repositories.Expenses;
 using MigraDoc.DocumentObjectModel;
@@ -62,7 +62,7 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
       row.Cells[1].AddParagraph(expense.Date.ToString("t"));
       SetStyleBaseForExpenseInformation(row.Cells[1]);
 
-      row.Cells[2].AddParagraph(ConvertPaymentType(expense.PaymentType));
+      row.Cells[2].AddParagraph(expense.PaymentType.PaymentTypeToString());
       SetStyleBaseForExpenseInformation(row.Cells[2]);
 
       AddAmountForExpense(row.Cells[3], expense.Amount);
@@ -87,7 +87,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
     return RenderDocument(document);
   }
-
   private Document CreateDocument(DateOnly month)
   {
     var document = new Document();
@@ -100,7 +99,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
     return document;
   }
-
   private Section CreatePage(Document document)
   {
     var section = document.AddSection();
@@ -115,7 +113,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
     return section;
   }
-
   private void CreateHeaderWithProfilePhotoAndName(Section page)
   {
     var table = page.AddTable();
@@ -134,7 +131,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
     row.Cells[1].Format.Font = new Font { Name = FontHelper.RALEWAY_BLACK, Size = 16 };
     row.Cells[1].VerticalAlignment = MigraDoc.DocumentObjectModel.Tables.VerticalAlignment.Center;
   }
-
   private void CreateTotalSpentSection(Section page, DateOnly month, decimal totalExpenses)
   {
     var paragraph = page.AddParagraph();
@@ -149,7 +145,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
     paragraph.AddFormattedText($"{totalExpenses:f2} {CURRENCY_SYMBOL}", new Font { Name = FontHelper.WORKSANS_BLACK, Size = 50 });
   }
-
   private Table CreateExpenseTable(Section page)
   {
     var table = page.AddTable();
@@ -158,9 +153,9 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
     table.AddColumn("80").Format.Alignment = ParagraphAlignment.Center;
     table.AddColumn("120").Format.Alignment = ParagraphAlignment.Center;
     table.AddColumn("120").Format.Alignment = ParagraphAlignment.Right;
+
     return table;
   }
-
   private void AddExpenseTitle(Cell cell, string expenseTitle)
   {
     cell.AddParagraph(expenseTitle);
@@ -170,7 +165,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
     cell.MergeRight = 2;
     cell.Format.LeftIndent = 20;
   }
-
   private void AddHeaderForAmount(Cell cell)
   {
     cell.AddParagraph(ResourceReportGenerationMessages.AMOUNT);
@@ -178,14 +172,12 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
     cell.Shading.Color = ColorsHelper.RED_DARK;
     cell.VerticalAlignment = VerticalAlignment.Center;
   }
-
   private void SetStyleBaseForExpenseInformation(Cell cell)
   {
     cell.Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 12, Color = ColorsHelper.BLACK };
     cell.Shading.Color = ColorsHelper.GREEN_DARK;
     cell.VerticalAlignment = VerticalAlignment.Center;
   }
-
   private void AddAmountForExpense(Cell cell, decimal amount)
   {
     cell.AddParagraph($"-{amount:f2} {CURRENCY_SYMBOL}");
@@ -193,26 +185,12 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
     cell.Shading.Color = ColorsHelper.WHITE;
     cell.VerticalAlignment = VerticalAlignment.Center;
   }
-
   private void AddWhiteSpace(Table table)
   {
     var row = table.AddRow();
     row.Height = 30;
     row.Borders.Visible = false;
   }
-
-  private string ConvertPaymentType(PaymentType paymentType)
-  {
-    return paymentType switch
-    {
-      PaymentType.Cash => ResourceReportGenerationMessages.CASH,
-      PaymentType.CreditCard => ResourceReportGenerationMessages.CREDIT_CARD,
-      PaymentType.DebitCard => ResourceReportGenerationMessages.DEBIT_CARD,
-      PaymentType.EletronicTransfer => ResourceReportGenerationMessages.ELETRONIC_TRANSFER,
-      _ => string.Empty
-    };
-  }
-
   private byte[] RenderDocument(Document document)
   {
     var renderer = new PdfDocumentRenderer
