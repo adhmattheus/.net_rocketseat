@@ -1,6 +1,6 @@
 ﻿using CashFlow.Communication.Responses;
 using CashFlow.Exception;
-using CashFlow.Exception.ExceptionBase;
+using CashFlow.Exception.ExceptionsBase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -24,7 +24,7 @@ public class ExcepetionFilter : IExceptionFilter
   private void HandleProjectException(ExceptionContext context)
   {
     var cashFlowException = (CashFlowException)context.Exception;
-    var errorResponse = new ResponseErrorJson(cashFlowException.GetErros());
+    var errorResponse = new ResponseErrorJson(cashFlowException.GetErrors());
 
     context.HttpContext.Response.StatusCode = cashFlowException.StatusCode;
     context.Result = new ObjectResult(errorResponse);
@@ -33,7 +33,7 @@ public class ExcepetionFilter : IExceptionFilter
 
   private void ThrowUnkownError(ExceptionContext context)
   {
-    var errorResponse = new ResponseErrorJson(ResourceErrorMessages.UNKNOW_ERROR);
+    var errorResponse = new ResponseErrorJson(ResourceErrorMessages.UNKNOWN_ERROR);
 
     context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
     context.Result = new ObjectResult(errorResponse);
