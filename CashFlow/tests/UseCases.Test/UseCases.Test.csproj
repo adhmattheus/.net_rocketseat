@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Expenses\" />
-    <Folder Include="Login\" />
   </ItemGroup>
 
 </Project>
