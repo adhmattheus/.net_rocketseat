@@ -21,11 +21,11 @@ internal class JwtTokenGenerator : IAccessTokenGenerator
   public string Generate(User user)
   {
     var claims = new List<Claim>()
-    {
-        new(ClaimTypes.Name, user.Name),
-        new (ClaimTypes.Sid, GetUserIdentifier(user).ToString()),
-        new (ClaimTypes.Role, user.Role)
-    };
+        {
+            new Claim(ClaimTypes.Name, user.Name),
+            new Claim(ClaimTypes.Sid, user.UserIdentifier.ToString()),
+            new Claim(ClaimTypes.Role, user.Role)
+        };
 
     var tokenDescriptor = new SecurityTokenDescriptor
     {
@@ -39,11 +39,6 @@ internal class JwtTokenGenerator : IAccessTokenGenerator
     var securityToken = tokenHandler.CreateToken(tokenDescriptor);
 
     return tokenHandler.WriteToken(securityToken);
-  }
-
-  private static Guid GetUserIdentifier(User user)
-  {
-    return user.UserIdentifier;
   }
 
   private SymmetricSecurityKey SecurityKey()
