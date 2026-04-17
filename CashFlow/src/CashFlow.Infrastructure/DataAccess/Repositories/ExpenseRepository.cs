@@ -12,7 +12,7 @@ internal class ExpenseRepository : IExpensesWriteOnlyRepository, IExpensesReadOn
     _dbContext = dbContext;
   }
 
-  public async Task AddAsync(Expense expense)
+  public async Task Add(Expense expense)
   {
     await _dbContext.Expenses.AddAsync(expense);
   }
@@ -40,9 +40,9 @@ internal class ExpenseRepository : IExpensesWriteOnlyRepository, IExpensesReadOn
     return await _dbContext.Expenses.AsNoTracking().FirstOrDefaultAsync(expense => expense.Id == id);
   }
 
-  async Task<Expense?> IExpensesUpdateOnlyRepository.GetById(long id)
+  async Task<Expense?> IExpensesUpdateOnlyRepository.GetById(User user, long id)
   {
-    return await _dbContext.Expenses.FirstOrDefaultAsync(expense => expense.Id == id);
+    return await _dbContext.Expenses.FirstOrDefaultAsync(expense => expense.Id == id && expense.UserId == user.Id);
   }
 
   public void Update(Expense expense)
@@ -54,7 +54,7 @@ internal class ExpenseRepository : IExpensesWriteOnlyRepository, IExpensesReadOn
   {
     var startDate = new DateTime(year: date.Year, month: date.Month, day: 1).Date;
     var daysInMonth = DateTime.DaysInMonth(date.Year, date.Month);
-    var endDate = new DateTime(year: date.Year, month: date.Month, day: daysInMonth, hour:23, minute:59, second:59);
+    var endDate = new DateTime(year: date.Year, month: date.Month, day: daysInMonth, hour: 23, minute: 59, second: 59);
 
     return await _dbContext
       .Expenses

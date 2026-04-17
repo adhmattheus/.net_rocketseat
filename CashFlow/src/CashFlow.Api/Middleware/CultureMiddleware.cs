@@ -4,28 +4,28 @@ namespace CashFlow.Api.Middleware;
 
 public class CultureMiddleware
 {
-    private readonly RequestDelegate _next;
-    public CultureMiddleware(RequestDelegate next)
+  private readonly RequestDelegate _next;
+  public CultureMiddleware(RequestDelegate next)
+  {
+    _next = next;
+  }
+  public async Task Invoke(HttpContext context)
+  {
+    var supportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures).ToList();
+
+    var requestdCulture = context.Request.Headers.AcceptLanguage.FirstOrDefault();
+
+    var cultureInfo = new CultureInfo("en");
+
+    if (string.IsNullOrEmpty(requestdCulture) == false
+        && supportedLanguages.Exists(language => language.Name.Equals(requestdCulture)))
     {
-        _next = next;
+      cultureInfo = new CultureInfo(requestdCulture);
     }
-    public async Task Invoke(HttpContext context)
-    {
-        var supportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures).ToList();
 
-        var requestdCulture = context.Request.Headers.AcceptLanguage.FirstOrDefault();
+    CultureInfo.CurrentCulture = cultureInfo;
+    CultureInfo.CurrentUICulture = cultureInfo;
 
-            var cultureInfo = new CultureInfo("en");
-
-        if (string.IsNullOrEmpty(requestdCulture) == false
-            && supportedLanguages.Exists(language => language.Name.Equals(requestdCulture)))
-        {
-            cultureInfo = new CultureInfo(requestdCulture);
-        }
-
-        CultureInfo.CurrentCulture = cultureInfo;
-        CultureInfo.CurrentUICulture = cultureInfo;
-
-        await _next(context);
-    }
+    await _next(context);
+  }
 }
